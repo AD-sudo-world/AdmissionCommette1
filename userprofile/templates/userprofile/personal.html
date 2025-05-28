@@ -1,0 +1,11 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="hero-inner">
+<div class="hero-buttons">
+                <a class="hero-button-one" href="{% url 'userprofile:personalAdd' %}">Внести изменения</a>
+                <a class="hero-button-two" href="{% url 'statements:addStatements' %}">Подать заявление</a>
+            </div>
+            </div>
+{% endblock %}

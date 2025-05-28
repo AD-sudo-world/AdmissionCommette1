@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1 class="hero-title">
+            РЕГИСТРАЦИЯ
+        </h1>
+<div class="login-form">
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Подтверждение пароля</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-input">
+            </div>
+</div>
+        
+        <div class="hero-inner">
+            <div class="hero-buttons">
+                <a class="hero-button-one" href="#">Зарегистрироваться</a>
+            </div>
+    </div>
+{% endblock %}

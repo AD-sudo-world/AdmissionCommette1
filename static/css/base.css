@@ -81,6 +81,8 @@ body {
     flex-direction: column;
     width: 100%;
     max-width: 320px;
+    justify-content: space-between;
+    row-gap: 20px;
 }
 
 .hero-button-one,
@@ -145,3 +147,30 @@ body {
     margin-bottom: 10px;
 }
 
+.login-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 25px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 50px;
+}
+.form-input {
+    padding: 10px 15px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 5px; /* Отступ от лейбла */
+}
+.application-form {
+    max-width: 600px;
+    margin: 30px auto;
+}
