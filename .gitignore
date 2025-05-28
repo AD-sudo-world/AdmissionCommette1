@@ -4,3 +4,6 @@ __pycache__/
 .idea
 db.sqlite3
 media/
+js/
+
+vxod.html

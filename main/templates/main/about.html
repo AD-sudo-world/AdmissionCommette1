@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="hero-title">
+                    <strong>{{content}}</strong>
+                </h2>
+                <div class="hero-inner">
+                    <div class="hero-text">
+                        <p class="paragraph">
+                            {{text_on_page}}
+                        </p>
+                </div>
+{% endblock content %}

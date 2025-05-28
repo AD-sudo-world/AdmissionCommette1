@@ -2,12 +2,16 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 # Create your views here.
 def index(request):
-
-    context: dict ={
-        'title': 'Home',
-        'content': 'Главная страница Комиссии - HOME'
+    context={
+        'title': 'Приемная комиссия ИГХТУ',
+        'content': "Добро пожаловать в ХИМТЕХ!"
     }
-    return render(request,'main/index.html', context)
+    return render(request, 'main/index.html', context)
 
 def about(request):
-    return HttpResponse('About page')
+    context={
+        'title': 'Миссия ИГХТУ',
+        'content': "Миссия ИГХТУ",
+        'text_on_page':"Мы работаем для того, чтобы обеспечить всем обучающимся в вузе хороший карьерный старт и профессиональные перспективы на рынке труда."
+    }
+    return render(request, 'main/about.html', context)
