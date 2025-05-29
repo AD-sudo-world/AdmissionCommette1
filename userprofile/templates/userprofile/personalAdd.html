@@ -3,17 +3,75 @@
 
 {% block content %}
 <h1 class="hero-title">РЕДАКТИРОВАНИЕ ПРОФИЛЯ</h1>
-
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 <form method="POST" action="{% url 'userprofile:update' %}">
     {% csrf_token %}
     
     <div class="login-form">
-        <!-- Остальные поля формы -->
+        <div class="form-group">
+            <label for="last_name">Фамилия</label>
+            <input type="text" id="last_name" name="last_name" class="form-input" 
+            value="{{ user.last_name|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="first_name">Имя</label>
+            <input type="text" id="first_name" name="first_name" class="form-input" 
+                value="{{ user.first_name|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="middle_name">Отчество</label>
+            <input type="text" id="middle_name" name="middle_name" class="form-input" 
+                value="{{ profile.middle_name|default:'' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="birth_date">Дата рождения</label>
+            <input type="date" id="birth_date" name="birth_date" class="form-input" 
+                value="{{ profile.birth_date|date:'Y-m-d'|default:'' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-input" 
+                value="{{ user.email|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" class="form-input" 
+                value="{{ profile.phone|default:'' }}" 
+                placeholder="+7XXXXXXXXXX">
+        </div>
+        
+        <div class="form-group">
+            <label for="doc_type">Тип документа</label>
+            <select id="doc_type" name="doc_type" class="form-input">
+                <option value="passport" {% if profile.doc_type == 'passport' %}selected{% endif %}>Паспорт</option>
+                <option value="birth_cert" {% if profile.doc_type == 'birth_cert' %}selected{% endif %}>Свидетельство о рождении</option>
+            </select>
+        </div>
         
         <div class="form-group">
             <label for="doc_number">Серия и номер документа</label>
             <input type="text" id="doc_number" name="doc_number" class="form-input" 
                 value="{% if profile.doc_series %}{{ profile.doc_series }} {{ profile.doc_number }}{% endif %}">
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="dormitory" {% if profile.dormitory_needed %}checked{% endif %}>
+                Требуется общежитие
+            </label>
         </div>
     </div>
     

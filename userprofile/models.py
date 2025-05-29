@@ -10,7 +10,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='user_profile',  # Изменено на уникальное имя
+        related_name='profile',  # Изменили обратно на 'profile'
         verbose_name=_('Пользователь')
     )
     middle_name = models.CharField(

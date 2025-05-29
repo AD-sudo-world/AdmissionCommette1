@@ -1,50 +1,53 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Faculty, Direction, Application, DirectionExam
+from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Faculty, Direction, DirectionExam, Application
+
+@login_required
+def index(request):
+    """Страница с заявлениями пользователя"""
+    applications = Application.objects.filter(user=request.user).select_related(
+        'direction', 'direction__faculty'
+    ).order_by('-created_at')
+    
+    return render(request, 'statements/myStatements.html', {
+        'applications': applications
+    })
 
 @login_required
 def addStatements(request):
-    if request.method == 'POST':
-        direction_id = request.POST.get('direction')
-        try:
-            direction = Direction.objects.get(id=direction_id)
-            application = Application.objects.create(
-                user=request.user,
-                direction=direction,
-                status='submitted'
-            )
-            # Здесь обработка экзаменов и других данных
-            return redirect('statements:index')
-        except Direction.DoesNotExist:
-            return render(request, 'statements/addStatements.html', {
-                'error': 'Выберите корректное направление',
-                'faculties': Faculty.objects.all()
-            })
-    
+    """Страница подачи заявления с факультетами и направлениями"""
+    faculties = Faculty.objects.all().order_by('name')
     return render(request, 'statements/addStatements.html', {
-        'faculties': Faculty.objects.all()
+        'faculties': faculties
     })
 
 def api_directions(request):
+    """API для получения направлений по факультету"""
     faculty_id = request.GET.get('faculty_id')
-    directions = Direction.objects.filter(faculty_id=faculty_id).values('id', 'code', 'name')
+    if not faculty_id:
+        return JsonResponse([], safe=False)
+    
+    directions = Direction.objects.filter(
+        faculty_id=faculty_id
+    ).order_by('code').values('id', 'code', 'name')
+    
     return JsonResponse(list(directions), safe=False)
 
 def api_direction_exams(request):
+    """API для получения экзаменов по направлению"""
     direction_id = request.GET.get('direction_id')
-    exams = DirectionExam.objects.filter(direction_id=direction_id).select_related('exam').values(
-        'id', 'exam__id', 'exam__name', 'exam__min_score', 'exam__max_score', 'required'
-    )
-    return JsonResponse(list(exams), safe=False)
-
-@login_required
-def myStatements(request):
-    # Получаем все заявления текущего пользователя
-    applications = Application.objects.filter(user=request.user)
+    if not direction_id:
+        return JsonResponse([], safe=False)
     
-    context = {
-        'applications': applications,
-        'title': 'Мои заявления'
-    }
-    return render(request, 'statements/myStatements.html', context)
+    exams = DirectionExam.objects.filter(
+        direction_id=direction_id
+    ).select_related('exam').order_by('exam__name').values(
+        'exam__id', 
+        'exam__name',
+        'exam__min_score',
+        'exam__max_score',
+        'required'
+    )
+    
+    return JsonResponse(list(exams), safe=False)
