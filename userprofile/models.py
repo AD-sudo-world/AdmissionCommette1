@@ -10,7 +10,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='profile',
+        related_name='user_profile',  # Изменено на уникальное имя
         verbose_name=_('Пользователь')
     )
     middle_name = models.CharField(
@@ -59,10 +59,10 @@ class Profile(models.Model):
     )
 
     class Meta:
-        db_table = 'user_profiles'  # Имя таблицы в БД
+        db_table = 'user_profiles'
         verbose_name = _('Профиль пользователя')
         verbose_name_plural = _('Профили пользователей')
-        ordering = ['user__last_name', 'user__first_name']  # Сортировка по ФИО
+        ordering = ['user__last_name', 'user__first_name']
         indexes = [
             models.Index(fields=['phone'], name='profile_phone_idx'),
             models.Index(fields=['doc_series', 'doc_number'], name='profile_doc_idx'),
