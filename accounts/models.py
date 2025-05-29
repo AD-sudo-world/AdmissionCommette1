@@ -5,11 +5,8 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='accounts_profile'  # Уникальное имя
+        related_name='account_profile',
+        verbose_name='Пользователь'  # Уникальное имя
     )
-    # остальные поля
-    # добавьте остальные поля профиля
-    phone = models.CharField(max_length=20, blank=True)
-    
     def __str__(self):
         return f"{self.user.username} Profile"
