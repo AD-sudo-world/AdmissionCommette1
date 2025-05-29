@@ -2,10 +2,101 @@
 {% load static %}
 
 {% block content %}
+<h1 class="hero-title">
+    ЛИЧНЫЙ КАБИНЕТ АБИТУРИЕНТА
+</h1>
+
+<div class="profile-info">
+    <div class="info-group">
+        <span class="info-label">Имя пользователя:</span>
+        <span class="info-value">{{ user.username }}</span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">ФИО:</span>
+        <span class="info-value">
+            {{ user.last_name }} {{ user.first_name }} 
+            {% if profile.middle_name %}
+                {{ profile.middle_name }}
+            {% endif %}
+        </span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Дата рождения:</span>
+        <span class="info-value">
+            {% if profile.birth_date %}
+                {{ profile.birth_date|date:"d.m.Y" }}
+            {% else %}
+                Не указана
+            {% endif %}
+        </span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Почта:</span>
+        <span class="info-value">{{ user.email }}</span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Телефон:</span>
+        <span class="info-value">
+            {% if profile.phone %}
+                {{ profile.phone }}
+            {% else %}
+                Не указан
+            {% endif %}
+        </span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Экзамены:</span>
+        <div class="exams-list">
+            {% if profile.exams.all %}
+                {% for exam in profile.exams.all %}
+                <div class="exam-item">
+                    <span class="exam-name">{{ exam.name }}</span>
+                    <span class="exam-score">{{ exam.score }} баллов</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <span class="text-muted">Нет добавленных экзаменов</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Документ:</span>
+        <span class="info-value">
+            {% if profile.doc_type == 'passport' %}
+                Паспорт
+            {% elif profile.doc_type == 'birth_cert' %}
+                Свидетельство о рождении
+            {% else %}
+                Не указан
+            {% endif %}
+            {% if profile.doc_series and profile.doc_number %}
+                {{ profile.doc_series }} {{ profile.doc_number }}
+            {% endif %}
+        </span>
+    </div>
+    
+    <div class="info-group">
+        <span class="info-label">Общежитие:</span>
+        <span class="info-value">
+            {% if profile.dormitory_needed %}
+                <span class="text-success">Нужно</span>
+            {% else %}
+                <span class="text-muted">Не нужно</span>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
 <div class="hero-inner">
-<div class="hero-buttons">
-                <a class="hero-button-one" href="{% url 'userprofile:personalAdd' %}">Внести изменения</a>
-                <a class="hero-button-two" href="{% url 'statements:addStatements' %}">Подать заявление</a>
-            </div>
-            </div>
+    <div class="hero-buttons">
+        <a class="hero-button-one" href="{% url 'userprofile:personalAdd' %}">Внести изменения</a>
+        <a class="hero-button-two" href="{% url 'statements:addStatements' %}">Подать заявление</a>
+    </div>
+</div>
 {% endblock %}

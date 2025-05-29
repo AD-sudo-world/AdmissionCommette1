@@ -1,0 +1,18 @@
+[
+    {
+        "model": "statements.faculty",
+        "pk": 1,
+        "fields": {
+            "name": "Информационные технологии",
+            "short_name": "ИТ"
+        }
+    },
+    {
+        "model": "statements.faculty",
+        "pk": 2,
+        "fields": {
+            "name": "Химическая технология",
+            "short_name": "ХТ"
+        }
+    }
+]

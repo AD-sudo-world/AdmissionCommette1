@@ -1,0 +1,11 @@
+[
+    {
+        "model": "statements.direction",
+        "pk": 1,
+        "fields": {
+            "faculty": 1,
+            "name": "Прикладная информатика",
+            "code": "09.03.03"
+        }
+    }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "model": "accounts.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "middle_name": "Иванович",
+            "birth_date": "2000-01-15",
+            "phone": "+79161234567",
+            "doc_type": "passport",
+            "doc_series": "1234",
+            "doc_number": "567890",
+            "dormitory_needed": true
+        }
+    }
+]

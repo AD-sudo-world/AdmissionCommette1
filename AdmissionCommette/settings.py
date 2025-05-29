@@ -58,7 +58,7 @@ ROOT_URLCONF = 'AdmissionCommette.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +66,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.middleware.common.BrokenLinkEmailsMiddleware',
+                'django.middleware.common.CommonMiddleware',
             ],
         },
     },
@@ -79,8 +81,12 @@ WSGI_APPLICATION = 'AdmissionCommette.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'AdmissionCommetee',
+        'USER': 'home',
+        'PASSWORD':'home',
+        'HOST':'localhost',
+        'PORT':'5432',
     }
 }
 
@@ -94,6 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -132,3 +141,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/accounts/login/'  # URL для входа
+LOGIN_REDIRECT_URL = 'userprofile:index'
+LOGOUT_REDIRECT_URL = 'accounts:login'
+AUTH_USER_MODEL = 'auth.User'  # Используется стандартная модель User
+INSTALLED_APPS = [
+    'django.contrib.admin',  # Обязательно первым
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',  
+    'statements',
+    'userprofile',
+]

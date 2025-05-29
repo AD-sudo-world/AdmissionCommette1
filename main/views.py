@@ -14,4 +14,4 @@ def about(request):
         'content': "Миссия ИГХТУ",
         'text_on_page':"Мы работаем для того, чтобы обеспечить всем обучающимся в вузе хороший карьерный старт и профессиональные перспективы на рынке труда."
     }
-    return render(request, 'main/about.html', context)
+    return render(request, 'main/about.html', context) 

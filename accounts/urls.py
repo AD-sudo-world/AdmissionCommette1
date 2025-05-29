@@ -1,9 +1,16 @@
 from django.urls import path
-from accounts import views
-from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from . import views
+
 app_name = 'accounts'
 
 urlpatterns = [
-    path('', views.vxod, name='index'),
     path('registr/', views.registr, name='registr'),
+    path('login/', auth_views.LoginView.as_view(
+        template_name='accounts/vxod.html',
+        redirect_authenticated_user=True
+    ), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(
+        next_page='accounts:login'
+    ), name='logout'),
 ]

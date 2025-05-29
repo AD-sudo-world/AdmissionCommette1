@@ -6,7 +6,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
-    <link href="{% static 'css/base.css' %}" rel="stylesheet" />
+    {% comment %} <link href="{% static 'css/reset.css' %}" rel="stylesheet"> {% endcomment %}
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
   </head>
   <body>
     <header class="header">
@@ -25,7 +26,7 @@
               </li>
             </ul>
           </nav>
-          <a class="header-button" href="{%url "accounts:index" %}">Войти</a>
+          <a class="header-button" href="{% url "accounts:login" %}">Войти</a>
         </div>
       </div>
     </header>

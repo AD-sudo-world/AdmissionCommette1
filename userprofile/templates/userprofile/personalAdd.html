@@ -2,71 +2,24 @@
 {% load static %}
 
 {% block content %}
-<h1 class="hero-title">
-            ЛИЧНЫЙ КАБИНЕТ АБИТУРИЕНТА
-        </h1>
+<h1 class="hero-title">РЕДАКТИРОВАНИЕ ПРОФИЛЯ</h1>
+
+<form method="POST" action="{% url 'userprofile:update' %}">
+    {% csrf_token %}
+    
+    <div class="login-form">
+        <!-- Остальные поля формы -->
         
-        <!-- Форма с данными пользователя -->
-        <div class="login-form">
-            <div class="form-group">
-                <label>Имя пользователя</label>
-                <input type="text" value="{{ username }}" class="form-input" disabled>
-            </div>
-            
-            <div class="form-group">
-                <label for="last_name">Фамилия</label>
-                <input type="text" id="last_name" name="last_name" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="middle_name">Отчество</label>
-                <input type="text" id="middle_name" name="middle_name" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Почта</label>
-                <input type="email" id="email" name="email" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Телефон</label>
-                <input type="tel" id="phone" name="phone" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="exams">Экзамены</label>
-                <input type="text" id="exams" name="exams" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="doc_type">Тип документа</label>
-                <select id="doc_type" name="doc_type" class="form-input">
-                    <option value="passport">Паспорт</option>
-                    <option value="birth_cert">Свидетельство о рождении</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="doc_number">Серия и номер</label>
-                <input type="text" id="doc_number" name="doc_number" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label>Общежитие</label>
-                <div class="radio-group">
-                    <input type="radio" id="dormitory_yes" name="dormitory" value="yes">
-                    <label for="dormitory_yes">Да</label>
-                    <input type="radio" id="dormitory_no" name="dormitory" value="no">
-                    <label for="dormitory_no">Нет</label>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="doc_number">Серия и номер документа</label>
+            <input type="text" id="doc_number" name="doc_number" class="form-input" 
+                value="{% if profile.doc_series %}{{ profile.doc_series }} {{ profile.doc_number }}{% endif %}">
         </div>
-            <div class="hero-buttons">
-                <a class="hero-button-one" href="{% url 'userprofile:index' %}">Сохранить изменения</a>
-            </div>
+    </div>
+    
+    <div class="hero-buttons">
+        <button type="submit" class="hero-button-one">Сохранить</button>
+        <a href="{% url 'userprofile:index' %}" class="hero-button-two">Отмена</a>
+    </div>
+</form>
 {% endblock %}

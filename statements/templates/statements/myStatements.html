@@ -2,5 +2,135 @@
 {% load static %}
 
 {% block content %}
+<h1 class="hero-title">
+    ПОДАЧА ЗАЯВЛЕНИЯ ИГХТУ
+</h1>
 
+<div class="login-form">
+    <form method="POST" action="{% url 'statements:addStatements' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="faculty">Факультет</label>
+            <select id="faculty" name="faculty" class="form-input" required>
+                <option value="">Выберите факультет</option>
+                {% for faculty in faculties %}
+                <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="direction">Направление подготовки</label>
+            <select id="direction" name="direction" class="form-input" required disabled>
+                <option value="">Сначала выберите факультет</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Требуемые экзамены</label>
+            <div id="exams-container" class="exams-container">
+                <div id="required-exams" class="exams-list">
+                    <p class="text-muted">Выберите направление для отображения экзаменов</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-buttons">
+            <button type="submit" class="hero-button-one">Подать заявление</button>
+            <a class="hero-button-two" href="{% url 'statements:index' %}">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const facultySelect = document.getElementById('faculty');
+    const directionSelect = document.getElementById('direction');
+    const examsContainer = document.getElementById('required-exams');
+    
+    // Загрузка направлений при выборе факультета
+    facultySelect.addEventListener('change', function() {
+        const facultyId = this.value;
+        
+        if (!facultyId) {
+            directionSelect.innerHTML = '<option value="">Сначала выберите факультет</option>';
+            directionSelect.disabled = true;
+            examsContainer.innerHTML = '<p class="text-muted">Выберите направление для отображения экзаменов</p>';
+            return;
+        }
+        
+        directionSelect.innerHTML = '<option value="">Загрузка направлений...</option>';
+        directionSelect.disabled = true;
+        
+        fetch(`{% url 'statements:api_directions' %}?faculty_id=${facultyId}`)
+            .then(response => response.json())
+            .then(data => {
+                directionSelect.innerHTML = '<option value="">Выберите направление</option>';
+                
+                if (data.length > 0) {
+                    data.forEach(direction => {
+                        const option = document.createElement('option');
+                        option.value = direction.id;
+                        option.textContent = `${direction.code} - ${direction.name}`;
+                        directionSelect.appendChild(option);
+                    });
+                    directionSelect.disabled = false;
+                } else {
+                    directionSelect.innerHTML = '<option value="">Нет доступных направлений</option>';
+                    examsContainer.innerHTML = '<p class="text-muted">Для выбранного факультета нет направлений</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки направлений:', error);
+                directionSelect.innerHTML = '<option value="">Ошибка загрузки</option>';
+            });
+    });
+    
+    // Загрузка экзаменов при выборе направления
+    directionSelect.addEventListener('change', function() {
+        const directionId = this.value;
+        
+        if (!directionId) {
+            examsContainer.innerHTML = '<p class="text-muted">Выберите направление для отображения экзаменов</p>';
+            return;
+        }
+        
+        examsContainer.innerHTML = '<p class="text-muted">Загрузка экзаменов...</p>';
+        
+        fetch(`{% url 'statements:api_direction_exams' %}?direction_id=${directionId}`)
+            .then(response => response.json())
+            .then(data => {
+                examsContainer.innerHTML = '';
+                
+                if (data.length > 0) {
+                    data.forEach(exam => {
+                        const examItem = document.createElement('div');
+                        examItem.className = 'exam-item';
+                        examItem.innerHTML = `
+                            <div class="exam-info">
+                                <span class="exam-name">${exam.name}</span>
+                                <span class="exam-range">(от ${exam.min_score} до ${exam.max_score} баллов)</span>
+                            </div>
+                            <input type="number" 
+                                name="exam_${exam.id}" 
+                                class="form-input exam-score" 
+                                min="${exam.min_score}" 
+                                max="${exam.max_score}" 
+                                placeholder="Введите балл" 
+                                required>
+                        `;
+                        examsContainer.appendChild(examItem);
+                    });
+                } else {
+                    examsContainer.innerHTML = '<p class="text-muted">Для выбранного направления нет экзаменов</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки экзаменов:', error);
+                examsContainer.innerHTML = '<p class="text-error">Ошибка загрузки экзаменов</p>';
+            });
+    });
+});
+</script>
 {% endblock %}

@@ -1,0 +1,11 @@
+[
+    {
+        "model": "statements.exam",
+        "pk": 1,
+        "fields": {
+            "name": "Математика",
+            "min_score": 40,
+            "max_score": 100
+        }
+    }
+]

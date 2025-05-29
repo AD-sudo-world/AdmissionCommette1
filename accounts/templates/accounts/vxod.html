@@ -2,24 +2,29 @@
 {% load static %}
 
 {% block content %}
-        <h1 class="hero-title">
-            ВХОД
-        </h1>
-        <!-- Форма входа -->
-        <div class="login-form">
-            <div class="form-group">
-                <label for="username">Имя пользователя</label>
-                <input type="text" id="username" name="username" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" class="form-input">
-            </div>
+<h1 class="hero-title">
+    ВХОД
+</h1>
+<form method="POST" action="{% url 'accounts:login' %}">
+    {% csrf_token %}
+    
+    <div class="login-form">
+        <div class="form-group">
+            <label for="username">Имя пользователя</label>
+            <input type="text" id="username" name="username" class="form-input" required>
         </div>
-        <div class="hero-inner">
-            <div class="hero-buttons">
-                <a class="hero-button-one" href="{% url "userprofile:index" %}">Войти</a>
-                <a class="hero-button-two" href="{% url "accounts:registr" %}">Зарегистрироваться</a>
-            </div>
+        
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" class="form-input" required>
+        </div>
+    </div>
+    
+    <div class="hero-inner">
+        <div class="hero-buttons">
+            <button type="submit" class="hero-button-one">Войти</button>
+            <a class="hero-button-two" href="{% url 'accounts:registr' %}">Зарегистрироваться</a>
+        </div>
+    </div>
+</form>
 {% endblock %}

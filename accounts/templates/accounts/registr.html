@@ -2,29 +2,35 @@
 {% load static %}
 
 {% block content %}
-<h1 class="hero-title">
-            РЕГИСТРАЦИЯ
-        </h1>
-<div class="login-form">
-            <div class="form-group">
-                <label for="username">Имя пользователя</label>
-                <input type="text" id="username" name="username" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="confirm_password">Подтверждение пароля</label>
-                <input type="password" id="confirm_password" name="confirm_password" class="form-input">
-            </div>
-</div>
-        
-        <div class="hero-inner">
-            <div class="hero-buttons">
-                <a class="hero-button-one" href="#">Зарегистрироваться</a>
-            </div>
+<h1 class="hero-title">РЕГИСТРАЦИЯ</h1>
+
+<form method="POST" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="login-form">
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
+    
+    <div class="hero-buttons">
+        <button type="submit" class="hero-button-one">Зарегистрироваться</button>
+        <a href="{% url 'accounts:login' %}" class="hero-button-two">Уже есть аккаунт?</a>
+    </div>
+</form>
 {% endblock %}
