@@ -1,11 +1,20 @@
 [
     {
-        "model": "statements.exam",
-        "pk": 1,
-        "fields": {
-            "name": "Математика",
-            "min_score": 40,
-            "max_score": 100
-        }
+    "model": "statements.exam",
+    "pk": 1,
+    "fields": {
+        "name": "Математика",
+        "min_score": 40,
+        "max_score": 100
     }
+},
+{
+    "model": "statements.exam",
+    "pk": 2,
+    "fields": {
+        "name": "Химия",
+        "min_score": 40,
+        "max_score": 100
+    }
+}
 ]

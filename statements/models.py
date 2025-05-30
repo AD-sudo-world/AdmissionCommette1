@@ -36,6 +36,7 @@ class Exam(models.Model):
     min_score = models.IntegerField(verbose_name="Минимальный балл")
     max_score = models.IntegerField(verbose_name="Максимальный балл")
     
+    
     class Meta:
         db_table = 'exams'  # Имя таблицы в БД
         verbose_name = 'Экзамен'

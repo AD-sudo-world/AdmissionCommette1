@@ -1,0 +1,20 @@
+[
+    {
+        "model": "statements.directionexam",
+        "pk": 1,
+        "fields": {
+            "direction": 1, 
+            "exam": 1,
+            "required": true
+        }
+    },
+    {
+        "model": "statements.directionexam",
+        "pk": 2,
+        "fields": {
+            "direction": 2, 
+            "exam": 2,
+            "required": true
+        }
+    }
+]

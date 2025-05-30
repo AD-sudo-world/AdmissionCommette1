@@ -29,8 +29,7 @@
         
         <div id="exams-container" class="form-group">
             <label>Требуемые экзамены</label>
-            <div id="required-exams">
-                <!-- Сюда будут загружаться экзамены через AJAX -->
+            <div id="required-exams" class="exam-box">
                 <p class="text-muted">Выберите направление для отображения экзаменов</p>
             </div>
         </div>
@@ -42,18 +41,59 @@
     </div>
 </form>
 
+<style>
+    .exam-box {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 5px;
+        background-color: #f9f9f9;
+    }
+    
+    .exam-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #eee;
+        border-radius: 3px;
+    }
+    
+    .exam-item label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .exam-item input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+    }
+    
+    .required-mark {
+        color: red;
+    }
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const facultySelect = document.getElementById('faculty');
     const directionSelect = document.getElementById('direction');
+    const examsContainer = document.getElementById('required-exams');
     
     // Загрузка направлений при выборе факультета
     facultySelect.addEventListener('change', function() {
         const facultyId = this.value;
         directionSelect.innerHTML = '<option value="">Загрузка...</option>';
+        examsContainer.innerHTML = '<p class="text-muted">Выберите направление для отображения экзаменов</p>';
         
         if (facultyId) {
-            fetch(`/api/directions/?faculty_id=${facultyId}`)
+            fetch(`{% url 'statements:api_directions' %}?faculty_id=${facultyId}`)
                 .then(response => response.json())
                 .then(data => {
                     directionSelect.innerHTML = '<option value="">Выберите направление</option>';
@@ -63,6 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         option.textContent = `${direction.code} - ${direction.name}`;
                         directionSelect.appendChild(option);
                     });
+                })
+                .catch(error => {
+                    console.error('Error loading directions:', error);
+                    directionSelect.innerHTML = '<option value="">Ошибка загрузки</option>';
                 });
         } else {
             directionSelect.innerHTML = '<option value="">Сначала выберите факультет</option>';
@@ -72,28 +116,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загрузка экзаменов при выборе направления
     directionSelect.addEventListener('change', function() {
         const directionId = this.value;
-        const examsContainer = document.getElementById('required-exams');
         
         if (directionId) {
-            fetch(`/api/direction-exams/?direction_id=${directionId}`)
-                .then(response => response.json())
+            fetch(`{% url 'statements:api_direction_exams' %}?direction_id=${directionId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Exams data received:', data); // Отладочная информация
                     examsContainer.innerHTML = '';
+                    
                     if (data.length > 0) {
                         data.forEach(exam => {
                             const examDiv = document.createElement('div');
                             examDiv.className = 'exam-item';
+                            
+                            const requiredMark = exam.required ? '<span class="required-mark">*</span>' : '';
+                            
                             examDiv.innerHTML = `
-                                <label>${exam.name} (${exam.min_score}-${exam.max_score} баллов)</label>
+                                <label>${exam.name} ${requiredMark} (мин. ${exam.min_score} баллов)</label>
                                 <input type="number" name="exam_${exam.id}" 
-                                    min="${exam.min_score}" max="${exam.max_score}" 
-                                    class="form-input" required>
+                                    min="${exam.min_score}" 
+                                    max="${exam.max_score || 100}" 
+                                    placeholder="Введите ваши баллы"
+                                    class="form-input" 
+                                    ${exam.required ? 'required' : ''}>
                             `;
                             examsContainer.appendChild(examDiv);
                         });
                     } else {
-                        examsContainer.innerHTML = '<p class="text-muted">Для этого направления нет экзаменов</p>';
+                        examsContainer.innerHTML = `
+                            <div class="exam-item text-danger">
+                                Для этого направления не указаны экзамены. 
+                                Пожалуйста, обратитесь в приемную комиссию.
+                            </div>`;
                     }
+                })
+                .catch(error => {
+                    console.error('Error loading exams:', error);
+                    examsContainer.innerHTML = `
+                        <div class="exam-item text-danger">
+                            Ошибка загрузки экзаменов. Пожалуйста, попробуйте позже.
+                        </div>`;
                 });
         } else {
             examsContainer.innerHTML = '<p class="text-muted">Выберите направление для отображения экзаменов</p>';

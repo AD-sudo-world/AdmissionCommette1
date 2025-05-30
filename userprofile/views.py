@@ -79,13 +79,12 @@ def update_profile(request):
             profile.full_clean()  # Валидация модели
             profile.save()
             
-            messages.success(request, _('Профиль успешно обновлен'))
-            return redirect('userprofile:personal')
+            messages.success(request, 'Профиль успешно обновлен')
+            return redirect('userprofile:update')
             
-        except ValidationError as e:
-            messages.error(request, _('Ошибка валидации: ') + str(e))
         except Exception as e:
-            messages.error(request, _('Произошла ошибка при обновлении профиля'))
+            # Только ОДНО сообщение об ошибке
+            messages.error(request, f'Произошла ошибка при обновлении профиля: {str(e)}')
             # Логирование ошибки (можно добавить logger.error здесь)
     
     return redirect('userprofile:personalAdd')

@@ -50,12 +50,16 @@ class Profile(models.Model):
         verbose_name=_('Требуется общежитие')
     )
     created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_('Дата создания')
+    auto_now_add=True,
+    null=True,  # Добавьте это
+    blank=True, # И это
+    verbose_name=_('Дата создания')
     )
     updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_('Дата обновления')
+    auto_now=True,
+    null=True,  # Добавьте это
+    blank=True, # И это
+    verbose_name=_('Дата обновления')
     )
 
     class Meta:

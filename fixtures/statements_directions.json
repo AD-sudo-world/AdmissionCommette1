@@ -7,5 +7,14 @@
             "name": "Прикладная информатика",
             "code": "09.03.03"
         }
+    },
+    {
+        "model": "statements.direction",
+        "pk": 2,
+        "fields": {
+            "faculty": 2,
+            "name": "Молекулярная химия",
+            "code": "18.03.01"
+        }
     }
 ]

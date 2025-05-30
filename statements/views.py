@@ -35,19 +35,20 @@ def api_directions(request):
     return JsonResponse(list(directions), safe=False)
 
 def api_direction_exams(request):
-    """API для получения экзаменов по направлению"""
     direction_id = request.GET.get('direction_id')
     if not direction_id:
         return JsonResponse([], safe=False)
     
     exams = DirectionExam.objects.filter(
         direction_id=direction_id
-    ).select_related('exam').order_by('exam__name').values(
-        'exam__id', 
-        'exam__name',
-        'exam__min_score',
-        'exam__max_score',
-        'required'
-    )
+    ).select_related('exam')
     
-    return JsonResponse(list(exams), safe=False)
+    exam_data = [{
+        'id': de.exam.pk,  # используем pk вместо id
+        'name': de.exam.name,
+        'min_score': de.exam.min_score,
+        'max_score': de.exam.max_score,
+        'required': de.required
+    } for de in exams]
+    
+    return JsonResponse(exam_data, safe=False)
