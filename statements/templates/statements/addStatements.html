@@ -2,6 +2,16 @@
 {% load static %}
 
 {% block content %}
+    {# Блок для отображения системных сообщений #}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 <h1 class="hero-title">
     ПОДАЧА ЗАЯВЛЕНИЯ ИГХТУ
 </h1>

@@ -1,35 +1,51 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>Мои заявления</h2>
-    
-    {% if applications %}
-        <table class="simple-table">
-            <thead>
-                <tr>
-                    <th>Факультет</th>
-                    <th>Направление</th>
-                    <th>Дата подачи</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for app in applications %}
-                <tr>
-                    <td>{{ app.direction.faculty.short_name }}</td>
-                    <td>{{ app.direction.code }} - {{ app.direction.name }}</td>
-                    <td>{{ app.created_at|date:"d.m.Y" }}</td>
-                    <td>{{ app.get_status_display }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>У вас нет поданных заявлений</p>
-        <a href="{% url 'statements:addStatements' %}" class="btn">Подать заявление</a>
-    {% endif %}
-</div>
+<h1>Мои заявления</h1>
 
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if applications %}
+<table class="simple-table">
+    <thead>
+        <tr>
+            <th>Факультет</th>
+            <th>Направление</th>
+            <th>Дата подачи</th>
+            <th>Статус</th>
+            <th>Действия</th>  <!-- Новая колонка -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.direction.faculty.short_name }}</td>
+            <td>{{ app.direction.code }} - {{ app.direction.name }}</td>
+            <td>{{ app.created_at|date:"d.m.Y" }}</td>
+            <td>{{ app.get_status_display }}</td>
+            <td>
+                <form method="post" action="{% url 'statements:delete_application' app.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-delete" onclick="return confirm('Вы уверены, что хотите удалить это заявление?')">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>У вас нет поданных заявлений</p>
+{% endif %}
+
+<a href="{% url 'statements:addStatements' %}" class="hero-button-one">Подать новое заявление</a>
 
 {% endblock %}

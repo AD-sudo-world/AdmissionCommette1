@@ -69,12 +69,17 @@ class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     direction = models.ForeignKey(Direction, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[
-        ('draft', 'Черновик'),
-        ('submitted', 'Подано'),
-        ('approved', 'Принято'),
-        ('rejected', 'Отклонено')
-    ], default='draft')
+    STATUS_CHOICES = [
+        ('Принято', 'Принято'),
+        ('Отклонено', 'Отклонено'),
+        ('На рассмотрении','На рассмотрении')
+    ]
+    
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='На рассмотрении'
+    )
     
     class Meta:
         db_table = 'applications'  # Имя таблицы в БД
